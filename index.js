@@ -1,0 +1,155 @@
+const express = require('express');
+const mongoose = require('mongoose');
+const cors = require('cors');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+
+const app = express();
+
+// --- MIDDLEWARES ---
+app.use(express.json());
+app.use(cors());
+
+// --- CONEXIÓN A LA BASE DE DATOS (MongoDB) ---
+const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/synapsis_db';
+mongoose.connect(MONGO_URI)
+  .then(() => console.log('Base de datos conectada con éxito a MongoDB'))
+  .catch(err => console.error('Error conectando a la base de datos:', err));
+
+// --- MODELO DE USUARIO ---
+const UserSchema = new mongoose.Schema({
+  email: { 
+    type: String, 
+    required: true, 
+    unique: true, 
+    lowercase: true,
+    trim: true,
+    match: [/^[a-zA-Z0-9._%+-]+@uvp\.(edu\.)?mx$/, 'Debe ser un correo institucional válido']
+  },
+  password: { type: String, required: true },
+  score: { type: Number, default: 0 } // Aciertos acumulados para el perfil
+});
+
+const User = mongoose.model('User', UserSchema);
+
+// --- MIDDLEWARE DE AUTENTICACIÓN (JWT) ---
+const verifyToken = (req, res, next) => {
+  const tokenHeader = req.headers['authorization'];
+  if (!tokenHeader) return res.status(401).json({ message: 'Acceso denegado. Token requerido.' });
+
+  try {
+    const token = tokenHeader.replace('Bearer ', '');
+    const verified = jwt.verify(token, process.env.JWT_SECRET || 'secreto_synapsis');
+    req.user = verified;
+    next();
+  } catch (error) {
+    res.status(400).json({ message: 'Token inválido o expirado' });
+  }
+};
+
+// ==========================================
+// --- RUTAS DE LA API ---
+// ==========================================
+
+// 1. Autenticación (Login / Registro automático para pruebas)
+app.post('/api/auth/login', async (req, res) => {
+  const { email, password } = req.body;
+  
+  try {
+    let user = await User.findOne({ email });
+    
+    // Si el usuario no existe, lo creamos automáticamente para agilizar pruebas
+    if (!user) {
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(password, salt);
+      user = new User({ email, password: hashedPassword });
+      await user.save();
+    } else {
+      const validPass = await bcrypt.compare(password, user.password);
+      if (!validPass) return res.status(400).json({ message: 'Contraseña incorrecta' });
+    }
+
+    const username = email.split('@')[0];
+    const token = jwt.sign({ id: user._id, email: user.email }, process.env.JWT_SECRET || 'secreto_synapsis', { expiresIn: '8h' });
+
+    res.json({
+      success: true,
+      token,
+      username,
+      email: user.email,
+      score: user.score
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// 2. Obtener Perfil del Usuario (Pantalla de Perfil)
+app.get('/api/user/profile', verifyToken, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+    const username = user.email.split('@')[0];
+    res.json({
+      success: true,
+      email: user.email,
+      username: username,
+      score: user.score
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// 3. Motor del Juego: Generar Secuencia Aleatoria (Cuadrícula 3x3)
+app.get('/api/game/sequence', (req, res) => {
+  const level = parseInt(req.query.level) || 4; // Longitud por defecto de la secuencia
+  const sequence = [];
+  
+  // Genera números aleatorios del 1 al 9 representando los cuadros 3x3
+  for (let i = 0; i < level; i++) {
+    sequence.push(Math.floor(Math.random() * 9) + 1);
+  }
+
+  res.json({
+    success: true,
+    level,
+    sequence,
+    displayTimeMs: 1000 // 1 segundo de encendido
+  });
+});
+
+// 4. Validar Secuencia y Actualizar Aciertos Acumulados
+app.post('/api/game/validate', verifyToken, async (req, res) => {
+  const { userSequence, targetSequence } = req.body;
+
+  try {
+    // Compara el arreglo enviado por el usuario con la secuencia objetivo
+    const isCorrect = JSON.stringify(userSequence) === JSON.stringify(targetSequence);
+
+    let currentScore = 0;
+    if (isCorrect) {
+      const user = await User.findById(req.user.id);
+      user.score += 1; // Suma +1 acierto acumulado
+      await user.save();
+      currentScore = user.score;
+    } else {
+      const user = await User.findById(req.user.id);
+      currentScore = user.score;
+    }
+
+    res.json({
+      success: true,
+      correct: isCorrect,
+      score: currentScore,
+      message: isCorrect ? '¡Patrón correcto! Acierto registrado.' : 'Patrón incorrecto.'
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// --- INICIAR SERVIDOR ---
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`Servidor de Backend corriendo en http://localhost:${PORT}`);
+});
