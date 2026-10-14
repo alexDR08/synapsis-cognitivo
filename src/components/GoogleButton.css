@@ -1,0 +1,11 @@
+.gbtn__holder {
+  display: flex;
+  justify-content: center;
+  min-height: 44px;
+}
+
+.gbtn__note {
+  color: var(--muted);
+  font-size: 0.85rem;
+  text-align: center;
+}

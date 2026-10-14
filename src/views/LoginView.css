@@ -1,0 +1,131 @@
+.login {
+  min-height: 100dvh;
+  display: grid;
+  grid-template-columns: 1.05fr 1fr;
+}
+
+.login__aside {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 40px;
+  padding: clamp(28px, 5vw, 64px);
+  background: var(--panel);
+  color: var(--panel-ink);
+}
+
+.login__aside h1 {
+  max-width: 13ch;
+  margin-bottom: 14px;
+  font-size: clamp(2rem, 4.2vw, 3.1rem);
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+}
+
+.login__aside p {
+  max-width: 34ch;
+  color: var(--panel-muted);
+}
+
+.login__preview {
+  width: min(300px, 70%);
+}
+
+.login__main {
+  display: grid;
+  place-items: center;
+  padding: 40px 24px;
+}
+
+.login__form {
+  width: 100%;
+  max-width: 380px;
+}
+
+.login__form h2 {
+  font-size: 1.6rem;
+  margin-bottom: 6px;
+}
+
+.login__lead {
+  margin-bottom: 28px;
+}
+
+.field {
+  margin-bottom: 20px;
+}
+
+.field label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.field input {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-field);
+  background: var(--surface);
+}
+
+.field input::placeholder {
+  color: var(--muted);
+  opacity: 0.7;
+}
+
+.field input:focus-visible {
+  outline-offset: 0;
+  border-color: var(--blue);
+}
+
+.login__error {
+  min-height: 1.5em;
+  margin: -6px 0 10px;
+  color: var(--danger);
+  font-size: 0.9rem;
+}
+
+.login__or {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 22px 0 18px;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.login__or::before,
+.login__or::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--line);
+}
+
+@media (max-width: 859px) {
+  .login {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+  }
+
+  .login__aside {
+    gap: 20px;
+    padding: calc(24px + env(safe-area-inset-top, 0px)) 24px 28px;
+  }
+
+  .login__aside h1 {
+    max-width: none;
+    font-size: 1.8rem;
+  }
+
+  .login__preview {
+    display: none;
+  }
+
+  .login__main {
+    align-items: start;
+    padding-top: 32px;
+  }
+}

@@ -1,0 +1,46 @@
+.pp {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.pp__node {
+  fill: var(--panel-node);
+  stroke: var(--panel-line);
+  stroke-width: 0.025;
+}
+
+.pp__node.is-lit {
+  animation: pp-ignite 0.5s ease-out both;
+}
+
+.pp__line {
+  fill: none;
+  stroke: var(--spark);
+  stroke-width: 0.06;
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+  opacity: 0.85;
+  animation: pp-draw 0.4s ease-out backwards;
+}
+
+@keyframes pp-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes pp-ignite {
+  from {
+    fill: var(--panel-node);
+    stroke: var(--panel-line);
+  }
+  to {
+    fill: var(--spark);
+    stroke: var(--spark);
+  }
+}

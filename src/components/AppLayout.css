@@ -1,0 +1,22 @@
+.shell__bar,
+.shell__main {
+  max-width: 1040px;
+  margin: 0 auto;
+}
+
+.shell__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: calc(16px + env(safe-area-inset-top, 0px)) 24px 0;
+}
+
+.shell__main {
+  padding: 28px 24px 120px;
+}
+
+@media (min-width: 860px) {
+  .shell__main {
+    padding-bottom: 64px;
+  }
+}

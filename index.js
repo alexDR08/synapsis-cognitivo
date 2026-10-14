@@ -1,8 +1,14 @@
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const { OAuth2Client } = require('google-auth-library');
+
+const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
+const googleClient = new OAuth2Client(GOOGLE_CLIENT_ID);
+const EMAIL_INSTITUCIONAL = /^[a-zA-Z0-9._%+-]+@uvp\.(edu\.)?mx$/;
 
 const app = express();
 
@@ -26,7 +32,8 @@ const UserSchema = new mongoose.Schema({
     trim: true,
     match: [/^[a-zA-Z0-9._%+-]+@uvp\.(edu\.)?mx$/, 'Debe ser un correo institucional válido']
   },
-  password: { type: String, required: true },
+  password: { type: String }, // vacío cuando la cuenta se creó con Google
+  googleId: { type: String, index: true },
   score: { type: Number, default: 0 } // Aciertos acumulados para el perfil
 });
 
@@ -65,6 +72,7 @@ app.post('/api/auth/login', async (req, res) => {
       user = new User({ email, password: hashedPassword });
       await user.save();
     } else {
+      if (!user.password) return res.status(400).json({ message: 'Esta cuenta usa Google. Entra con el botón de Google.' });
       const validPass = await bcrypt.compare(password, user.password);
       if (!validPass) return res.status(400).json({ message: 'Contraseña incorrecta' });
     }
@@ -81,6 +89,47 @@ app.post('/api/auth/login', async (req, res) => {
     });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// 1b. Autenticación con Google (Google Identity Services)
+app.post('/api/auth/google', async (req, res) => {
+  const { credential } = req.body;
+  if (!credential) return res.status(400).json({ message: 'Falta el token de Google.' });
+  if (!GOOGLE_CLIENT_ID) return res.status(500).json({ message: 'GOOGLE_CLIENT_ID no está configurado en el servidor.' });
+
+  try {
+    // Google firma el token; aquí se verifica firma, vigencia y que sea para NUESTRA app
+    const ticket = await googleClient.verifyIdToken({ idToken: credential, audience: GOOGLE_CLIENT_ID });
+    const payload = ticket.getPayload();
+
+    if (!payload.email_verified) return res.status(401).json({ message: 'El correo de Google no está verificado.' });
+
+    const email = payload.email.toLowerCase();
+    if (!EMAIL_INSTITUCIONAL.test(email)) {
+      return res.status(403).json({ message: 'Debes usar tu correo institucional (@uvp.edu.mx).' });
+    }
+
+    let user = await User.findOne({ email });
+    if (!user) {
+      user = await User.create({ email, googleId: payload.sub });
+    } else if (!user.googleId) {
+      user.googleId = payload.sub;
+      await user.save();
+    }
+
+    const token = jwt.sign({ id: user._id, email: user.email }, process.env.JWT_SECRET || 'secreto_synapsis', { expiresIn: '8h' });
+    res.json({
+      success: true,
+      token,
+      username: email.split('@')[0],
+      email: user.email,
+      name: payload.name,
+      picture: payload.picture,
+      score: user.score
+    });
+  } catch (err) {
+    res.status(401).json({ success: false, message: 'Token de Google inválido o expirado.' });
   }
 });
 

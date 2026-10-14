@@ -1,0 +1,53 @@
+/* Paleta tomada del logo: azul marino de la silueta, azul de la esfera
+   y un ámbar que solo se usa para el "impulso" que se enciende. */
+:root {
+  color-scheme: light dark;
+
+  --bg: #edf1f8;
+  --surface: #ffffff;
+  --ink: #0b1b3f;
+  --muted: #51607c;
+  --line: #d3dceb;
+
+  --blue: #2450c2;
+  --blue-soft: #dce6fa;
+  --on-blue: #ffffff;
+
+  /* Paneles oscuros (hero y tablero) iguales en claro y oscuro */
+  --panel: #0b1b3f;
+  --panel-ink: #eaf0ff;
+  --panel-muted: #a9b9dc;
+  --panel-line: rgba(255, 255, 255, 0.16);
+  --panel-node: rgba(255, 255, 255, 0.07);
+
+  --spark: #f5a524;
+  --spark-glow: rgba(245, 165, 36, 0.5);
+  --on-spark: #0b1b3f;
+  --trace: #8fb1ff;
+
+  --danger: #b3261e;
+
+  --radius-panel: 28px;
+  --radius-card: 20px;
+  --radius-field: 14px;
+
+  --font: "Lexend", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #08122b;
+    --surface: #0f1d40;
+    --ink: #e8eefb;
+    --muted: #9aa9c8;
+    --line: #223461;
+
+    --blue: #7ea2ff;
+    --blue-soft: #1a2d5e;
+    --on-blue: #08122b;
+
+    --panel: #132a66;
+    --spark: #ffc15a;
+    --danger: #ff8a80;
+  }
+}
