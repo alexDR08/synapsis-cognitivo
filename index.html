@@ -1,0 +1,459 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Synapsis Cognitivo</title>
+  <meta name="description" content="Memorama de Synapsis para bajar el estrés en el entorno estudiantil.">
+  <link rel="icon" type="image/png" href="img/logo.png">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- LOGIN -->
+  <section id="login" class="screen">
+    <img class="logo" src="img/logo.png" alt="Logotipo de Synapsis">
+    <h1>Synapsis Cognitivo</h1>
+    <p class="sub">Una pausa para bajar el estrés, un par a la vez.</p>
+
+    <!-- Cuentas recordadas: entrar con un toque -->
+    <div id="quick" class="card quick" hidden>
+      <h2 class="quick-title">Continuar como</h2>
+      <div id="quickList" class="quick-list"></div>
+      <button type="button" class="btn ghost block" id="otherAccount">Usar otra cuenta</button>
+    </div>
+
+    <form id="loginForm" class="card" novalidate>
+      <button type="button" class="back-link" id="backQuick" hidden>← Volver a mis cuentas</button>
+      <label for="email">Correo institucional o nombre de usuario</label>
+      <input class="in" id="email" type="text" autocomplete="username" autocapitalize="none" spellcheck="false" placeholder="matricula@uvp.edu.mx o tu usuario">
+      <label for="password">Contraseña</label>
+      <div class="pw">
+        <input class="in" id="password" type="password" autocomplete="current-password" placeholder="••••••••">
+        <button type="button" class="pw-toggle" id="pwToggle" aria-label="Mostrar contraseña">
+          <svg viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>
+        </button>
+      </div>
+      <div id="nameField" class="reveal" hidden>
+        <label for="name">Es tu primera vez. ¿Cómo te gusta que te llamen?</label>
+        <input class="in" id="name" type="text" autocomplete="given-name" placeholder="Tu nombre" maxlength="30">
+      </div>
+      <label class="check">
+        <input type="checkbox" id="remember" checked>
+        <span>Recordar mi cuenta en este dispositivo</span>
+      </label>
+      <div id="authError" class="err" role="alert"></div>
+      <button class="btn" type="submit" id="loginBtn">Ingresar</button>
+
+      <div class="or"><span>o</span></div>
+      <div id="googleBtn" class="google-slot"></div>
+      <button type="button" class="btn ghost gbtn" id="googleFallback">
+        <svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>
+        Continuar con Google
+      </button>
+      <p class="hint">Si es tu primera vez, se crea tu cuenta automáticamente. ¿Sin correo? Inventa un nombre de usuario y una contraseña.</p>
+    </form>
+  </section>
+
+  <!-- INICIO: bienvenida + nivel de estrés -->
+  <main id="inicio" class="screen wrap">
+    <header class="top">
+      <div>
+        <div class="date" id="date"></div>
+        <h2><span class="wave" aria-hidden="true">👋</span> <span id="welcomeTitle">Te damos la bienvenida</span></h2>
+        <p id="welcomeSub">Tómate unos minutos para ti antes de volver a tus tareas.</p>
+      </div>
+      <div class="top-actions">
+        <button class="icon-btn" id="breatheBtn" title="Pausa para respirar" aria-label="Pausa para respirar">
+          <svg viewBox="0 0 24 24"><path d="M12 4v7"/><path d="M12 11c-2 0-3 1.5-3 4v3c0 1.5-1 2-2.5 2S4 19 4 16c0-4 2-8 5-8"/><path d="M12 11c2 0 3 1.5 3 4v3c0 1.5 1 2 2.5 2s2.5-1 2.5-4c0-4-2-8-5-8"/></svg>
+        </button>
+        <button class="icon-btn" id="soundBtn" title="Sonido" aria-label="Activar o desactivar sonido">
+          <svg viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path class="wave-on" d="M16.5 8.5a5 5 0 0 1 0 7"/><path class="wave-off" d="M17 9l5 6M22 9l-5 6"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <section class="card hero" aria-labelledby="checkTitle">
+      <div>
+        <span class="tag">Check‑in de estrés</span>
+        <h3 id="checkTitle">¿Qué nivel de estrés sientes ahora?</h3>
+        <p>Elige con honestidad. Con base en tu respuesta te recomendamos la dificultad ideal para relajarte.</p>
+        <div class="stress" id="stressStart" role="radiogroup" aria-label="Nivel de estrés"></div>
+      </div>
+      <div class="prev" aria-hidden="true" id="preview"></div>
+    </section>
+
+    <section class="card reco" id="reco" hidden aria-labelledby="recoTitle">
+      <div class="reco-grid">
+        <div>
+          <span class="tag">Recomendado para ti</span>
+          <h3 id="recoTitle">Fácil · Zen</h3>
+          <p id="recoWhy"></p>
+          <button class="btn ghost sm" id="recoBreathe" hidden>Respirar primero · 1 min</button>
+        </div>
+        <div>
+          <label>Juego</label>
+          <div class="seg" id="games" role="radiogroup" aria-label="Juego">
+            <button type="button" role="radio" data-game="memorama" aria-checked="true">🃏 Memorama<small>encuentra pares</small></button>
+            <button type="button" role="radio" data-game="secuencia" aria-checked="false">⚽ Secuencia<small>repite el patrón</small></button>
+          </div>
+          <label>Dificultad <span class="muted">(puedes cambiarla)</span></label>
+          <div class="seg" id="levels" role="radiogroup" aria-label="Dificultad">
+            <button type="button" role="radio" data-level="facil" aria-checked="true">Fácil<small>6 pares</small></button>
+            <button type="button" role="radio" data-level="medio" aria-checked="false">Medio<small>10 pares</small></button>
+            <button type="button" role="radio" data-level="dificil" aria-checked="false">Difícil<small>12 pares</small></button>
+          </div>
+          <div id="modeField">
+            <label>Modo</label>
+            <div class="seg" id="modes" role="radiogroup" aria-label="Modo de juego">
+              <button type="button" role="radio" data-mode="zen" aria-checked="true">Zen<small>sin reloj</small></button>
+              <button type="button" role="radio" data-mode="reto" aria-checked="false">Reto<small>contra reloj</small></button>
+            </div>
+          </div>
+          <button class="btn block" id="startBtn">Comenzar</button>
+          <p class="best" id="bestLine"></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- PARA HOY: frase, tip y diario -->
+    <h4 class="sec">Para hoy</h4>
+    <div class="today">
+      <article class="card quote">
+        <span class="tag">Frase del día</span>
+        <blockquote id="quote">…</blockquote>
+        <div class="quote-deco" aria-hidden="true">“</div>
+      </article>
+      <article class="card tipday">
+        <span class="tag">Tip de estudio</span>
+        <div class="tip-emo" id="tipEmo" aria-hidden="true">📚</div>
+        <h5 id="tipTitle">…</h5>
+        <p id="tipText"></p>
+      </article>
+    </div>
+
+    <section class="card gratitude" aria-labelledby="gTitle">
+      <div class="g-head">
+        <div>
+          <span class="tag">Diario de gratitud</span>
+          <h3 id="gTitle">3 cosas buenas de hoy</h3>
+          <p class="muted" id="gSub">Escribir lo bueno del día entrena a tu mente a notar lo positivo.</p>
+        </div>
+        <div class="g-count"><b id="gDays">0</b><span>días escritos</span></div>
+      </div>
+      <form id="gForm" class="g-form">
+        <label class="g-line"><span>1</span><input class="in" maxlength="80" placeholder="Ej. Acabé mi tarea"></label>
+        <label class="g-line"><span>2</span><input class="in" maxlength="80" placeholder="Ej. Vi a un amigo"></label>
+        <label class="g-line"><span>3</span><input class="in" maxlength="80" placeholder="Ej. Comí algo rico"></label>
+        <button class="btn" type="submit">Guardar</button>
+      </form>
+      <div id="gSaved" class="g-saved" hidden>
+        <ul id="gList"></ul>
+        <button class="btn ghost sm" id="gEdit" type="button">Editar</button>
+      </div>
+    </section>
+
+    <!-- PROGRESO -->
+    <h4 class="sec">Tu progreso</h4>
+    <div class="kpis">
+      <div class="card kpi"><span class="k-ico" aria-hidden="true">🔥</span><b id="kStreak">0</b><span>días de racha</span></div>
+      <div class="card kpi"><span class="k-ico" aria-hidden="true">🎮</span><b id="kWeek">0</b><span>partidas esta semana</span></div>
+      <div class="card kpi"><span class="k-ico" aria-hidden="true">📉</span><b id="kDown">0%</b><span>pausas que bajaron tu estrés</span></div>
+      <div class="card kpi"><span class="k-ico" aria-hidden="true">⏱️</span><b id="kMin">0</b><span>minutos de pausa</span></div>
+    </div>
+    <div class="charts">
+      <article class="card chart">
+        <h5>Partidas en los últimos 7 días</h5>
+        <svg id="weekChart" viewBox="0 0 320 150" role="img" aria-label="Partidas por día"></svg>
+      </article>
+      <article class="card chart">
+        <div class="chart-head">
+          <h5>Estrés antes y después de jugar</h5>
+          <div class="legend" aria-hidden="true">
+            <span><i class="lg-before"></i>Antes</span>
+            <span><i class="lg-after"></i>Después</span>
+          </div>
+        </div>
+        <svg id="stressChart" viewBox="0 0 320 150" role="img" aria-label="Nivel de estrés antes y después de cada partida"></svg>
+        <table class="sr-only" id="stressTable"></table>
+      </article>
+    </div>
+
+    <h4 class="sec">Logros <span class="muted" id="badgeCount">0/12</span></h4>
+    <div class="badges" id="badges"></div>
+
+    <h4 class="sec">¿Por qué hacer pausas activas?</h4>
+    <div class="three">
+      <article class="card">
+        <h5>Previenen la fatiga</h5>
+        <p>Desconectar 5 minutos reactiva la agudeza mental sin que pierdas el hilo de lo que estudias.</p>
+      </article>
+      <article class="card">
+        <h5>Mejoran la atención</h5>
+        <p>Los retos breves reinician el ciclo de concentración y ayudan a retener mejor lo aprendido.</p>
+      </article>
+      <article class="card">
+        <h5>Devuelven la calma</h5>
+        <p>Cambiar el foco al juego disipa la tensión y deja la mente clara para tareas complejas.</p>
+      </article>
+    </div>
+  </main>
+
+  <!-- PERFIL -->
+  <main id="perfil" class="screen wrap">
+    <!-- Encabezado del perfil -->
+    <section class="card phero">
+      <div class="phero-cover" aria-hidden="true">
+        <svg viewBox="0 0 400 120" preserveAspectRatio="xMidYMid slice">
+          <g fill="none" stroke="currentColor" stroke-width="1.4">
+            <ellipse cx="330" cy="60" rx="90" ry="48" transform="rotate(-20 330 60)"/>
+            <ellipse cx="330" cy="60" rx="80" ry="40" transform="rotate(30 330 60)"/>
+            <ellipse cx="330" cy="60" rx="64" ry="70" transform="rotate(75 330 60)"/>
+            <circle cx="60" cy="20" r="34"/><circle cx="160" cy="110" r="22"/>
+          </g>
+        </svg>
+      </div>
+      <div class="phero-body">
+        <div class="av-ring" id="avRing">
+          <div class="av" id="avt">U</div>
+        </div>
+        <div class="pinfo">
+          <div class="pname-row">
+            <h2 id="pname"></h2>
+            <button class="icon-btn sm" id="editName" title="Editar nombre" aria-label="Editar nombre">
+              <svg viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16v4z"/><path d="M13.5 6.5l4 4"/></svg>
+            </button>
+          </div>
+          <form id="nameForm" class="name-form" hidden>
+            <input class="in" id="nameInput" maxlength="30" aria-label="Nuevo nombre">
+            <button class="btn sm" type="submit">Guardar</button>
+            <button class="btn ghost sm" type="button" id="nameCancel">Cancelar</button>
+          </form>
+          <div class="muted" id="pmail"></div>
+          <div class="pmeta">
+            <span class="tag" id="pRank">Nivel 1 · Semilla</span>
+            <span class="muted" id="pSince"></span>
+            <span class="gbadge" id="pGoogle" hidden>Cuenta de Google</span>
+          </div>
+          <div class="xp">
+            <div class="xp-top"><span id="xpLabel">0 XP</span><span class="muted" id="xpNext"></span></div>
+            <div class="track"><div id="xpBar"></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Números principales -->
+    <div class="pstats">
+      <div class="card pstat"><b id="psGames">0</b><span>partidas</span></div>
+      <div class="card pstat"><b id="psStreak">0</b><span>racha actual</span></div>
+      <div class="card pstat"><b id="psBestStreak">0</b><span>mejor racha</span></div>
+      <div class="card pstat"><b id="psBadges">0/12</b><span>logros</span></div>
+      <div class="card pstat"><b id="psMin">0</b><span>minutos de pausa</span></div>
+    </div>
+
+    <div class="pcols">
+      <div class="pcol">
+        <!-- Calendario de actividad -->
+        <article class="card pcard">
+          <div class="pcard-head">
+            <h5>Calendario de actividad</h5>
+            <span class="muted small" id="calSummary"></span>
+          </div>
+          <div class="cal-wrap"><svg id="calendar" role="img" aria-label="Partidas por día en las últimas semanas"></svg></div>
+          <div class="cal-legend" aria-hidden="true">
+            <span>Menos</span><i class="h0"></i><i class="h1"></i><i class="h2"></i><i class="h3"></i><i class="h4"></i><span>Más</span>
+          </div>
+        </article>
+
+        <!-- Historial reciente -->
+        <article class="card pcard">
+          <h5>Últimas partidas</h5>
+          <ul class="hlist" id="hList"></ul>
+        </article>
+
+        <!-- Recuerdos del diario -->
+        <article class="card pcard">
+          <h5>Recuerdos de tu diario</h5>
+          <div class="memories" id="memories"></div>
+        </article>
+      </div>
+
+      <div class="pcol">
+        <!-- Juego favorito -->
+        <article class="card pcard">
+          <h5>Tu juego favorito</h5>
+          <div class="fav" id="fav"></div>
+        </article>
+
+        <!-- Mejores marcas -->
+        <article class="card pcard">
+          <h5>Mejores marcas</h5>
+          <div class="records">
+            <div>
+              <div class="rec-title">🃏 Memorama</div>
+              <ul class="plist" id="pbestMemo"></ul>
+            </div>
+            <div>
+              <div class="rec-title">⚽ Secuencia</div>
+              <ul class="plist" id="pbestSeq"></ul>
+            </div>
+          </div>
+        </article>
+
+        <!-- Logros obtenidos -->
+        <article class="card pcard">
+          <div class="pcard-head">
+            <h5>Logros</h5>
+            <button class="link" id="seeBadges" type="button">Ver todos</button>
+          </div>
+          <div class="mini-badges" id="miniBadges"></div>
+        </article>
+
+        <!-- Preferencias -->
+        <article class="card pcard">
+          <h5>Preferencias</h5>
+          <div class="pref">
+            <div>
+              <b>Tema</b>
+              <small class="muted">Apariencia de la app</small>
+            </div>
+            <div class="seg mini" id="themeSeg" role="radiogroup" aria-label="Tema">
+              <button type="button" role="radio" data-theme-opt="auto">Auto</button>
+              <button type="button" role="radio" data-theme-opt="light">Claro</button>
+              <button type="button" role="radio" data-theme-opt="dark">Oscuro</button>
+            </div>
+          </div>
+          <div class="pref">
+            <div>
+              <b>Sonidos</b>
+              <small class="muted">Efectos al jugar y respirar</small>
+            </div>
+            <button class="switch" id="soundSwitch" role="switch" aria-checked="true" aria-label="Sonidos"><span></span></button>
+          </div>
+          <div class="pactions">
+            <button class="btn ghost" id="logoutBtn">Cerrar sesión</button>
+            <button class="btn ghost danger" id="resetBtn">Borrar mi progreso</button>
+          </div>
+        </article>
+      </div>
+    </div>
+  </main>
+
+  <!-- JUEGO -->
+  <section id="juego" class="screen">
+    <div class="gbar">
+      <button class="btn ghost sm" id="exitBtn">Salir</button>
+      <span><span id="levelName">Fácil</span> · Movimientos: <b id="moves">0</b> · Pares: <b id="pairs">0/0</b><span id="timeStat"> · <b id="time">0:00</b></span></span>
+      <button class="btn ghost sm" id="restartBtn" title="Reiniciar" aria-label="Reiniciar">↻</button>
+    </div>
+    <div class="card board">
+      <div class="grid" id="grid"></div>
+      <div class="sover" id="tOver" hidden>
+        <div class="sover-box">
+          <div class="sover-icon clock">⏰</div>
+          <h3>¡Se acabó el tiempo!</h3>
+          <p id="tOverText">Encontraste 0 de 0 pares.</p>
+          <p>Respira y vuelve a intentarlo, o juega sin reloj.</p>
+          <div class="row">
+            <button class="btn" id="tRetry">Intentar de nuevo</button>
+            <button class="btn ghost" id="tZen">Jugar en Zen</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="ret"><span id="retLabel">Progreso</span><div class="track"><div id="bar"></div></div></div>
+    <p id="st" aria-live="polite"></p>
+  </section>
+
+  <!-- SECUENCIA DE PATRONES -->
+  <section id="secuencia" class="screen">
+    <div class="gbar">
+      <button class="btn ghost sm" id="sExit">Salir</button>
+      <span><span id="sLevel">Fácil</span> · Ronda: <b id="sRound">1</b> · <span class="lives" id="sLives" aria-label="Intentos"></span></span>
+      <button class="btn ghost sm" id="sFinish">Terminar</button>
+    </div>
+    <div class="card board sboard">
+      <div class="sgrid" id="sgrid"></div>
+      <div class="sover" id="sOver" hidden>
+        <div class="sover-box">
+          <div class="sover-icon">💫</div>
+          <h3>Se acabaron tus 4 intentos</h3>
+          <p id="sOverText">Llegaste a la ronda 1.</p>
+          <p class="sover-count">Nueva secuencia en <b id="sOverCount">3</b></p>
+        </div>
+      </div>
+    </div>
+    <div class="ret"><span id="sRetLabel">Ventana de retención</span><div class="track"><div id="sbar"></div></div></div>
+    <p id="sst" aria-live="polite"></p>
+  </section>
+
+  <!-- FIN -->
+  <main id="fin" class="screen wrap">
+    <div class="card result">
+      <img class="logo sm" src="img/logo.png" alt="">
+      <h2 id="finTitle">¡Lo lograste!</h2>
+      <div class="stars" id="stars" aria-label="Calificación"></div>
+      <div class="summary">
+        <div><b id="rMoves">0</b><span id="rMovesL">movimientos</span></div>
+        <div><b id="rTime">0:00</b><span id="rTimeL">tiempo</span></div>
+        <div><b id="rPairs">0</b><span id="rPairsL">pares</span></div>
+      </div>
+      <p class="record" id="record" hidden>Nuevo récord personal</p>
+
+      <label>¿Y ahora qué nivel de estrés sientes?</label>
+      <div class="stress" id="stressEnd" role="radiogroup" aria-label="Nivel de estrés final"></div>
+      <p class="mood-msg" id="moodMsg"></p>
+
+      <details class="tips" id="tipsBox">
+        <summary>Consejos que desbloqueaste</summary>
+        <ul id="tipList"></ul>
+      </details>
+
+      <div class="row">
+        <button class="btn" id="againBtn">Jugar otra vez</button>
+        <button class="btn ghost" id="finBreathe">Respirar</button>
+        <button class="btn ghost" id="homeBtn">Inicio</button>
+      </div>
+    </div>
+  </main>
+
+  <!-- NAVEGACIÓN (mismo patrón que Synapsis) -->
+  <nav id="nav" hidden>
+    <div>
+      <button data-v="inicio" aria-current="page"><svg viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="8" />
+          <circle cx="12" cy="12" r="3.5" />
+        </svg>Entrenar</button>
+      <button data-v="perfil"><svg viewBox="0 0 24 24">
+          <circle cx="12" cy="8" r="4" />
+          <path d="M4.5 20c1.2-3.6 4-5.2 7.5-5.2s6.3 1.6 7.5 5.2" />
+        </svg>Perfil</button>
+    </div>
+  </nav>
+
+  <!-- RESPIRACIÓN -->
+  <dialog id="breathe" aria-labelledby="bTitle">
+    <span class="tag">Pausa guiada</span>
+    <h3 id="bTitle">Respiración 4 · 4 · 6</h3>
+    <div class="circle-wrap">
+      <div class="ring"></div>
+      <div class="circle" id="circle"><span id="bText">Listo</span></div>
+    </div>
+    <p class="b-sub" id="bSub">3 ciclos · menos de 1 minuto</p>
+    <div class="row">
+      <button class="btn" id="bStart">Empezar</button>
+      <button class="btn ghost" id="bClose">Cerrar</button>
+    </div>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <div class="ctip" id="ctip" role="tooltip" hidden></div>
+  <div class="fx" id="fx" aria-hidden="true"></div>
+
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+</body>
+</html>
