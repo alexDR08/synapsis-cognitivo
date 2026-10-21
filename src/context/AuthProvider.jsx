@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import { closeActivitySession, pingActivitySession, startActivitySession } from '../api/activity.js'
 import * as authApi from '../api/auth.js'
 import { TOKEN_KEY, USER_KEY } from '../lib/storage.js'
 import { AuthContext } from './AuthContext.js'
@@ -32,10 +33,28 @@ export function AuthProvider({ children }) {
     }
   }, [session])
 
-  const startSession = useCallback((data) => {
+  // Cada visita (con sesión iniciada) queda registrada; al ocultar o cerrar la pestaña se avisa la última actividad.
+  const token = session.token
+  const provider = session.user?.provider
+  useEffect(() => {
+    if (!token) return undefined
+    startActivitySession(provider)
+    const onHidden = () => {
+      if (document.visibilityState === 'hidden') pingActivitySession()
+    }
+    document.addEventListener('visibilitychange', onHidden)
+    window.addEventListener('pagehide', pingActivitySession)
+    return () => {
+      document.removeEventListener('visibilitychange', onHidden)
+      window.removeEventListener('pagehide', pingActivitySession)
+    }
+  }, [token, provider])
+
+  const startSession = useCallback((data, provider) => {
     setSession({
       token: data.token,
       user: {
+        provider,
         email: data.email,
         username: data.username,
         name: data.name ?? null,
@@ -49,12 +68,13 @@ export function AuthProvider({ children }) {
     () => ({
       user: session.user,
       async signInWithPassword(email, password) {
-        startSession(await authApi.loginWithPassword(email, password))
+        startSession(await authApi.loginWithPassword(email, password), 'password')
       },
       async signInWithGoogle(credential) {
-        startSession(await authApi.loginWithGoogle(credential))
+        startSession(await authApi.loginWithGoogle(credential), 'google')
       },
       signOut() {
+        closeActivitySession() // marca el cierre antes de borrar el token
         setSession(EMPTY)
         window.google?.accounts?.id?.disableAutoSelect?.()
       },

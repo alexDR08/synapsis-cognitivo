@@ -1,9 +1,11 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { logAttempt, logEvent } from '../api/activity.js'
 import { validateSequence } from '../api/game.js'
 import { isAuthError } from '../api/client.js'
 import Button from '../components/Button.jsx'
 import NeuronBoard from '../components/NeuronBoard.jsx'
+import SuccessBurst from '../components/SuccessBurst.jsx'
 import { useAuth } from '../context/useAuth.js'
 import { useSequenceGame } from '../hooks/useSequenceGame.js'
 import './GameView.css'
@@ -32,7 +34,18 @@ export default function GameView() {
     [addScore, setScore, signOut],
   )
 
-  const game = useSequenceGame({ onCorrect: handleCorrect })
+  // Cada ronda (acierto o error) queda registrada como un intento.
+  const handleAttempt = useCallback((attempt) => {
+    logAttempt({
+      game: 'sequence',
+      level: 'medio',
+      success: attempt.success,
+      durationSec: attempt.durationSec,
+      metrics: { length: attempt.length, hits: attempt.hits, taps: attempt.taps },
+    })
+  }, [])
+
+  const game = useSequenceGame({ onCorrect: handleCorrect, onAttempt: handleAttempt })
   const { start, stop } = game
 
   useEffect(() => {
@@ -41,6 +54,7 @@ export default function GameView() {
   }, [start, stop])
 
   function leave() {
+    if (game.hits > 0) logEvent('game_exit', { game: 'sequence', hits: game.hits })
     stop()
     navigate('/')
   }
@@ -52,21 +66,34 @@ export default function GameView() {
           Salir
         </Button>
         <p className="muted">
-          Nivel medio · Aciertos: <strong>{game.hits}</strong>
+          Nivel medio · Aciertos:{' '}
+          <strong key={game.hits} className="game__hits">
+            {game.hits}
+          </strong>
         </p>
       </div>
 
-      <NeuronBoard
-        lit={game.lit}
-        tapped={game.tapped}
-        bad={game.bad}
-        trail={game.trail}
-        trailTone={game.trailTone}
-        locked={game.phase !== 'input'}
-        onTap={game.tap}
-      />
+      <div className="game__board">
+        <NeuronBoard
+          lit={game.lit}
+          tapped={game.tapped}
+          bad={game.bad}
+          trail={game.trail}
+          trailTone={game.trailTone}
+          locked={game.phase !== 'input'}
+          celebrate={game.phase === 'won'}
+          onTap={game.tap}
+        />
+        {game.phase === 'won' && (
+          <SuccessBurst
+            key={game.hits}
+            title="¡Patrón correcto!"
+            subtitle={game.hits === 1 ? 'Llevas 1 acierto' : `Llevas ${game.hits} aciertos`}
+          />
+        )}
+      </div>
 
-      <p className="game__status" aria-live="polite">
+      <p className={`game__status${game.phase === 'won' ? ' is-won' : ''}`} aria-live="polite">
         {game.message}
       </p>
 

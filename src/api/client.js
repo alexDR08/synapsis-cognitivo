@@ -8,7 +8,7 @@ export class ApiError extends Error {
 }
 
 // Las rutas empiezan con /api; Vite las reenvía al backend (ver vite.config.mjs).
-export async function request(path, { method = 'GET', body, auth = false } = {}) {
+export async function request(path, { method = 'GET', body, auth = false, keepalive = false } = {}) {
   const headers = {}
   if (body !== undefined) headers['Content-Type'] = 'application/json'
   if (auth) {
@@ -22,6 +22,7 @@ export async function request(path, { method = 'GET', body, auth = false } = {})
       method,
       headers,
       body: body === undefined ? undefined : JSON.stringify(body),
+      keepalive,
     })
   } catch {
     throw new ApiError(

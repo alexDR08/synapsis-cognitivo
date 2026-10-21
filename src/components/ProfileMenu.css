@@ -1,0 +1,138 @@
+.pmenu {
+  position: relative;
+}
+
+.pmenu__chevron {
+  display: none;
+}
+
+.pmenu__panel {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 14px); /* en el celular la barra está abajo: el menú sube */
+  z-index: 20;
+  width: min(280px, calc(100vw - 32px));
+  padding: 8px;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: var(--surface);
+  box-shadow: 0 14px 36px rgba(4, 12, 34, 0.28);
+  color: var(--ink);
+  animation: pmenu-in 0.16s ease-out backwards;
+  transform-origin: bottom right;
+}
+
+@keyframes pmenu-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.97);
+  }
+}
+
+.pmenu__who {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 10px 14px;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 6px;
+}
+
+.pmenu__avatar {
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.pmenu__avatar--initial {
+  display: grid;
+  place-items: center;
+  background: var(--blue-soft);
+  color: var(--blue);
+  font-weight: 600;
+}
+
+.pmenu__id {
+  display: grid;
+  min-width: 0;
+  font-size: 0.92rem;
+  text-align: left;
+}
+
+.pmenu__id strong,
+.pmenu__id .muted {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pmenu__id .muted {
+  font-size: 0.8rem;
+}
+
+.pmenu__item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 11px 12px;
+  border: 0;
+  border-radius: 14px;
+  background: none;
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.95rem;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.pmenu__item:hover,
+.pmenu__item:focus-visible {
+  background: var(--blue-soft);
+}
+
+.pmenu__item span:not(.pmenu__badge) {
+  flex: 1;
+}
+
+.pmenu__badge {
+  min-width: 2ch;
+  padding: 2px 10px;
+  border-radius: 99px;
+  background: var(--blue-soft);
+  color: var(--blue);
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.pmenu__item:hover .pmenu__badge {
+  background: var(--surface);
+}
+
+.pmenu__item--out {
+  color: var(--danger);
+}
+
+@media (min-width: 860px) {
+  .pmenu__chevron {
+    display: inline-flex;
+    margin-left: -2px;
+  }
+
+  .pmenu__panel {
+    top: calc(100% + 10px); /* en pantallas anchas la barra está arriba: el menú baja */
+    bottom: auto;
+    transform-origin: top right;
+  }
+
+  @keyframes pmenu-in {
+    from {
+      opacity: 0;
+      transform: translateY(-6px) scale(0.97);
+    }
+  }
+}

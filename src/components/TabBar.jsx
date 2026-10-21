@@ -1,5 +1,6 @@
 import { NavLink } from 'react-router-dom'
-import { TargetIcon, UserIcon } from './Icons.jsx'
+import { TargetIcon } from './Icons.jsx'
+import ProfileMenu from './ProfileMenu.jsx'
 import './TabBar.css'
 
 // Barra inferior en celular; en pantallas anchas se acomoda dentro del encabezado.
@@ -11,10 +12,7 @@ export default function TabBar() {
           <TargetIcon />
           Entrenar
         </NavLink>
-        <NavLink to="/perfil">
-          <UserIcon />
-          Perfil
-        </NavLink>
+        <ProfileMenu />
       </div>
     </nav>
   )

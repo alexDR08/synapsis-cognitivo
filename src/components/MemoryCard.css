@@ -1,0 +1,121 @@
+.mc {
+  display: block;
+  aspect-ratio: 4 / 5;
+  padding: 0;
+  border: 0;
+  background: none;
+  border-radius: 16px;
+  perspective: 700px;
+  cursor: pointer;
+}
+
+.mc:disabled {
+  cursor: default;
+}
+
+/* 1. Reparto: las cartas caen sobre el tablero una tras otra, boca abajo */
+.mc--dealing {
+  animation: mc-deal 0.5s cubic-bezier(0.2, 0.8, 0.3, 1) backwards;
+  animation-delay: calc(var(--i) * 35ms);
+}
+
+/* 2 y 3. Al mostrar y al tapar, el volteo se escalona de carta en carta */
+.mc--preview .mc__inner,
+.mc--hiding .mc__inner {
+  transition-delay: calc(var(--i) * 25ms);
+}
+
+/* En la fase de memorización las cartas no se tocan, pero no deben verse apagadas */
+.mc--preview:disabled,
+.mc--hiding:disabled,
+.mc--dealing:disabled {
+  opacity: 1;
+}
+
+.mc:focus-visible {
+  outline-color: var(--spark);
+}
+
+.mc__inner {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.45s cubic-bezier(0.3, 0.7, 0.3, 1);
+}
+
+.mc.is-up .mc__inner {
+  transform: rotateY(180deg);
+}
+
+.mc__face {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 16px;
+  backface-visibility: hidden;
+}
+
+/* Dorso: la cuadrícula de 3x3 puntos del logo */
+.mc__back {
+  border: 1px solid var(--panel-line);
+  background-color: rgba(255, 255, 255, 0.07);
+  background-image: radial-gradient(circle 2.5px at center, rgba(255, 255, 255, 0.34) 98%, transparent 100%);
+  background-size: 33.333% 33.333%;
+  transition: background-color 0.15s;
+}
+
+.mc:not(:disabled):hover .mc__back {
+  background-color: rgba(255, 255, 255, 0.14);
+}
+
+.mc__front {
+  transform: rotateY(180deg);
+  border: 2px solid transparent;
+  background: var(--surface);
+}
+
+.mc__glyph {
+  width: 52%;
+  height: auto;
+}
+
+.mc.is-missed .mc__front {
+  border-color: var(--danger);
+  animation: mc-shake 0.35s;
+}
+
+.mc.is-matched .mc__front {
+  border-color: var(--spark);
+  box-shadow: 0 0 0 3px rgba(245, 165, 36, 0.25), 0 0 22px var(--spark-glow);
+  animation: mc-pop 0.5s;
+}
+
+@keyframes mc-deal {
+  from {
+    opacity: 0;
+    transform: translateY(-26px) scale(0.8) rotate(-6deg);
+  }
+}
+
+/* Mientras se memoriza, un destello suave marca que las cartas están a la vista */
+.mc--preview.is-up .mc__front {
+  border-color: var(--trace);
+}
+
+@keyframes mc-pop {
+  40% {
+    transform: rotateY(180deg) scale(1.1);
+  }
+}
+
+@keyframes mc-shake {
+  25% {
+    transform: rotateY(180deg) translateX(-5px);
+  }
+  75% {
+    transform: rotateY(180deg) translateX(5px);
+  }
+}

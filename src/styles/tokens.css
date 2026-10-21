@@ -27,6 +27,16 @@
 
   --danger: #b3261e;
 
+  /* Símbolos del memorama: cada pareja cambia de forma Y de color */
+  --sym-1: #c77700;
+  --sym-2: #2450c2;
+  --sym-3: #0e8f7e;
+  --sym-4: #e0482f;
+  --sym-5: #6d4cd1;
+  --sym-6: #1e88d6;
+  --sym-7: #c2377f;
+  --sym-8: #5c9a1e;
+
   --radius-panel: 28px;
   --radius-card: 20px;
   --radius-field: 14px;
@@ -49,5 +59,14 @@
     --panel: #132a66;
     --spark: #ffc15a;
     --danger: #ff8a80;
+
+    --sym-1: #ffc15a;
+    --sym-2: #7ea2ff;
+    --sym-3: #4fd1bd;
+    --sym-4: #ff8a73;
+    --sym-5: #b29bff;
+    --sym-6: #5cc0ff;
+    --sym-7: #ff8fc4;
+    --sym-8: #a5d95b;
   }
 }

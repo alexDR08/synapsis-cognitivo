@@ -11,10 +11,11 @@ const center = (cell) => ({
  * une cada punto con el anterior, como un impulso viajando entre neuronas.
  * - lit: punto encendido ahora   - tapped: punto que la persona acaba de tocar
  * - bad: punto equivocado        - trail: puntos ya conectados
+ * - celebrate: una ola de luz recorre el tablero (acierto)
  */
-export default function NeuronBoard({ lit, tapped, bad, trail, trailTone, locked, onTap }) {
+export default function NeuronBoard({ lit, tapped, bad, trail, trailTone, locked, celebrate = false, onTap }) {
   return (
-    <div className="nb">
+    <div className={`nb${celebrate ? ' nb--won' : ''}`}>
       <div className="nb__inner">
         <svg className={`nb__trail nb__trail--${trailTone}`} viewBox="0 0 3 3" aria-hidden="true">
           {trail.slice(1).map((cell, i) => {
@@ -50,6 +51,7 @@ export default function NeuronBoard({ lit, tapped, bad, trail, trailTone, locked
                   className={`nb__node ${state}`}
                   aria-label={`Punto ${cell + 1}`}
                   aria-disabled={locked}
+                  style={{ '--d': `${((cell % COLUMNS) + Math.floor(cell / COLUMNS)) * 70}ms` }}
                   onClick={() => onTap(cell)}
                 />
               </div>

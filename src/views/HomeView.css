@@ -12,12 +12,42 @@
   color: var(--muted);
 }
 
+.streak {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+  padding: 6px 14px;
+  border: 1px solid var(--line);
+  border-radius: 99px;
+  background: var(--surface);
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+.streak__dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--line);
+}
+
+.streak.is-lit {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+.streak.is-lit .streak__dot {
+  background: var(--spark);
+  box-shadow: 0 0 0 3px rgba(245, 165, 36, 0.28);
+}
+
 .hero {
   display: grid;
   grid-template-columns: 1.15fr 0.85fr;
   gap: 40px;
   align-items: center;
-  margin-bottom: 56px;
+  margin-bottom: 40px;
   padding: clamp(28px, 5vw, 56px);
   border-radius: var(--radius-panel);
   background: var(--panel);
@@ -50,6 +80,67 @@
 .hero__preview {
   width: min(280px, 100%);
   justify-self: center;
+}
+
+/* Tercer panel: texto a la izquierda, tablero a la derecha, con un resplandor verde azulado */
+.hero--odd {
+  margin-bottom: 56px;
+  background-image: radial-gradient(circle at 0 100%, rgba(79, 209, 189, 0.2), transparent 55%);
+}
+
+.hero--odd .hero__preview {
+  width: min(320px, 100%);
+}
+
+/* Segundo panel: misma familia que el primero, con la ilustración a la izquierda y un resplandor ámbar */
+.hero--memory {
+  grid-template-columns: 0.85fr 1.15fr;
+  background-image: radial-gradient(circle at 100% 0, rgba(143, 177, 255, 0.2), transparent 55%);
+}
+
+.hero--memory .hero__preview {
+  width: min(340px, 100%);
+}
+
+.hero__tag {
+  display: inline-block;
+  margin-bottom: 12px;
+  padding: 4px 12px;
+  border-radius: 99px;
+  background: rgba(245, 165, 36, 0.16);
+  color: var(--spark);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.hero__text > p.hero__tag {
+  max-width: none;
+  margin-bottom: 12px;
+  color: var(--spark);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 28px;
+  padding: 0;
+  list-style: none;
+}
+
+.chips li {
+  padding: 6px 14px;
+  border: 1px solid var(--panel-line);
+  border-radius: 99px;
+  color: var(--panel-muted);
+  font-size: 0.85rem;
+}
+
+.chips strong {
+  color: var(--panel-ink);
+  font-weight: 600;
 }
 
 .why h2 {
@@ -91,6 +182,16 @@
 
   .hero__preview {
     width: min(220px, 70%);
+    justify-self: start;
+  }
+
+  .hero--memory {
+    grid-template-columns: 1fr;
+  }
+
+  .hero--memory .hero__preview {
+    order: 2;
+    width: min(300px, 100%);
     justify-self: start;
   }
 

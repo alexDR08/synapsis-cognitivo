@@ -5,6 +5,8 @@ const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { OAuth2Client } = require('google-auth-library');
+const { getDb, describeFirestore } = require('./server/firebase');
+const createActivityRouter = require('./server/activity');
 
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const googleClient = new OAuth2Client(GOOGLE_CLIENT_ID);
@@ -197,8 +199,16 @@ app.post('/api/game/validate', verifyToken, async (req, res) => {
   }
 });
 
+// 5. Actividad en Firestore (Firebase): sesiones, intentos, eventos y rachas
+app.use('/api/activity', createActivityRouter({
+  verifyToken,
+  getDb,
+  timezone: process.env.APP_TIMEZONE || 'America/Mexico_City'
+}));
+
 // --- INICIAR SERVIDOR ---
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Servidor de Backend corriendo en http://localhost:${PORT}`);
+  console.log(describeFirestore());
 });

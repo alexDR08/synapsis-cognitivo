@@ -4,6 +4,8 @@ import ProtectedRoute from './components/ProtectedRoute.jsx'
 import GameView from './views/GameView.jsx'
 import HomeView from './views/HomeView.jsx'
 import LoginView from './views/LoginView.jsx'
+import MemoryView from './views/MemoryView.jsx'
+import OddView from './views/OddView.jsx'
 import ProfileView from './views/ProfileView.jsx'
 
 export default function App() {
@@ -17,6 +19,8 @@ export default function App() {
           <Route path="perfil" element={<ProfileView />} />
         </Route>
         <Route path="juego" element={<GameView />} />
+        <Route path="memorama" element={<MemoryView />} />
+        <Route path="intruso" element={<OddView />} />
       </Route>
 
       <Route path="*" element={<Navigate to="/" replace />} />

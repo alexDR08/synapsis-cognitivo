@@ -1,0 +1,74 @@
+.mp {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: clamp(7px, 1.6vw, 12px);
+  width: 100%;
+}
+
+.mp__card {
+  display: block;
+  aspect-ratio: 4 / 5;
+  perspective: 600px;
+}
+
+.mp__inner {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.5s cubic-bezier(0.3, 0.7, 0.3, 1);
+  transition-delay: calc(var(--i) * 22ms);
+}
+
+.mp__card.is-up .mp__inner {
+  transform: rotateY(180deg);
+}
+
+.mp__face {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  backface-visibility: hidden;
+}
+
+.mp__back {
+  border: 1px solid var(--panel-line);
+  background-color: rgba(255, 255, 255, 0.08);
+  background-image: radial-gradient(circle 2px at center, rgba(255, 255, 255, 0.4) 98%, transparent 100%);
+  background-size: 33.333% 33.333%;
+}
+
+.mp__front {
+  transform: rotateY(180deg);
+  border: 2px solid transparent;
+  background: var(--surface);
+  color: var(--c);
+}
+
+.mp__front svg {
+  width: 52%;
+  height: auto;
+}
+
+.mp__card.is-missed .mp__front {
+  border-color: var(--danger);
+}
+
+.mp__card.is-matched .mp__front {
+  border-color: var(--spark);
+  box-shadow: 0 0 0 3px rgba(245, 165, 36, 0.25), 0 0 22px var(--spark-glow);
+}
+
+.mp.is-playing .mp__card.is-matched .mp__inner {
+  animation: mp-pop 0.55s 0.35s;
+}
+
+/* Al terminar de girar, las dos cartas de la pareja botan un poco */
+@keyframes mp-pop {
+  40% {
+    transform: rotateY(180deg) scale(1.12);
+  }
+}

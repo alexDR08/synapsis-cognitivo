@@ -3,7 +3,7 @@ import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 import Button from '../components/Button.jsx'
 import GoogleButton from '../components/GoogleButton.jsx'
 import Logo from '../components/Logo.jsx'
-import PatternPreview from '../components/PatternPreview.jsx'
+import BrainAnimation from '../components/BrainAnimation.jsx'
 import { useAuth } from '../context/useAuth.js'
 import { INSTITUTIONAL_EMAIL } from '../lib/format.js'
 import './LoginView.css'
@@ -55,7 +55,7 @@ export default function LoginView() {
           <h1>Entrena tu mente, un poco cada día.</h1>
           <p>Retos cortos de memoria para tus pausas entre clases.</p>
         </div>
-        <PatternPreview className="login__preview" />
+        <BrainAnimation className="login__preview" />
       </aside>
 
       <main className="login__main">

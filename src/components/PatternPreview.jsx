@@ -5,9 +5,9 @@ const PATH = [0, 4, 8, 5]
 const center = (cell) => ({ x: (cell % 3) + 0.5, y: Math.floor(cell / 3) + 0.5 })
 const STEP = 0.45 // segundos entre punto y punto
 
-export default function PatternPreview({ className = '' }) {
+export default function PatternPreview({ className = '', playing = false }) {
   return (
-    <svg className={`pp ${className}`} viewBox="0 0 3 3" role="img" aria-label="Ejemplo de patrón de puntos">
+    <svg className={`pp${playing ? ' is-playing' : ''} ${className}`} viewBox="0 0 3 3" role="img" aria-label="Ejemplo de patrón de puntos">
       {PATH.slice(1).map((cell, i) => {
         const from = center(PATH[i])
         const to = center(cell)

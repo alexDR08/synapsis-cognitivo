@@ -7,6 +7,13 @@ const LIGHT_MS = 500 // cuánto dura encendido cada punto
 const START_LENGTH = 3
 const MAX_LENGTH = 7
 
+// Vibración corta en celulares que la soportan (en computadora no hace nada).
+function vibrate(pattern) {
+  if (typeof navigator !== 'undefined' && typeof navigator.vibrate === 'function') {
+    navigator.vibrate(pattern)
+  }
+}
+
 function newSequence(length) {
   const sequence = []
   while (sequence.length < length) {
@@ -19,9 +26,10 @@ function newSequence(length) {
 /**
  * Juego de secuencias: el tablero enciende N puntos, la persona los repite.
  * onCorrect(userSequence, targetSequence) se llama en cada acierto (valores 1-9,
- * como espera el backend).
+ * como espera el backend). onAttempt({ success, durationSec, length, hits, taps }) se llama
+ * al terminar cada ronda, con acierto o con error.
  */
-export function useSequenceGame({ onCorrect } = {}) {
+export function useSequenceGame({ onCorrect, onAttempt } = {}) {
   const [phase, setPhase] = useState('idle') // idle | showing | input | won | lost
   const [message, setMessage] = useState('')
   const [lit, setLit] = useState(null)
@@ -39,11 +47,24 @@ export function useSequenceGame({ onCorrect } = {}) {
   const hitsRef = useRef(0)
   const lengthRef = useRef(START_LENGTH)
   const locked = useRef(true)
+  const inputStartedAt = useRef(0)
   const onCorrectRef = useRef(onCorrect)
+  const onAttemptRef = useRef(onAttempt)
 
   useEffect(() => {
     onCorrectRef.current = onCorrect
+    onAttemptRef.current = onAttempt
   })
+
+  const reportAttempt = useCallback((success) => {
+    onAttemptRef.current?.({
+      success,
+      durationSec: (Date.now() - inputStartedAt.current) / 1000,
+      length: sequence.current.length,
+      hits: hitsRef.current,
+      taps: taps.current.length + (success ? 0 : 1),
+    })
+  }, [])
 
   const clear = useCallback(() => {
     timers.current.forEach(clearTimeout)
@@ -83,6 +104,7 @@ export function useSequenceGame({ onCorrect } = {}) {
 
       later(() => {
         locked.current = false
+        inputStartedAt.current = Date.now()
         setPhase('input')
         setTrail([])
         setTrailTone('trace')
@@ -118,6 +140,8 @@ export function useSequenceGame({ onCorrect } = {}) {
         setBad(cell)
         setPhase('lost')
         setMessage('Casi. Mira el patrón otra vez')
+        vibrate(120)
+        reportAttempt(false)
         later(() => startRound(lengthRef.current), 1300)
         return
       }
@@ -133,6 +157,8 @@ export function useSequenceGame({ onCorrect } = {}) {
         setLength(lengthRef.current)
         setPhase('won')
         setMessage('¡Bien! Prepárate para el siguiente patrón')
+        vibrate([30, 40, 70])
+        reportAttempt(true)
         onCorrectRef.current?.(
           taps.current.map((c) => c + 1),
           sequence.current.map((c) => c + 1),
@@ -140,7 +166,7 @@ export function useSequenceGame({ onCorrect } = {}) {
         later(() => startRound(lengthRef.current), 1200)
       }
     },
-    [later, startRound],
+    [later, startRound, reportAttempt],
   )
 
   useEffect(() => clear, [clear])

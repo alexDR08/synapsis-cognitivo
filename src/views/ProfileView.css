@@ -3,8 +3,14 @@
   font-size: clamp(1.8rem, 3.4vw, 2.4rem);
 }
 
+.profile__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 420px) minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+
 .profile__card {
-  max-width: 420px;
   padding: 32px;
   border: 1px solid var(--line);
   border-radius: var(--radius-card);
@@ -43,5 +49,185 @@
 }
 
 .profile__label {
-  margin-bottom: 28px;
+  margin-bottom: 4px;
+}
+
+.profile__pick {
+  display: grid;
+  gap: 6px;
+  margin-top: 22px;
+  font-size: 0.88rem;
+}
+
+/* Select con flecha propia, igual en claro y oscuro */
+.select {
+  position: relative;
+}
+
+.select select {
+  width: 100%;
+  appearance: none;
+  padding: 11px 42px 11px 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-field);
+  background: var(--bg);
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+
+.select select:hover {
+  border-color: var(--blue);
+}
+
+.select::after {
+  content: '';
+  position: absolute;
+  right: 18px;
+  top: 50%;
+  width: 8px;
+  height: 8px;
+  border-right: 2px solid var(--muted);
+  border-bottom: 2px solid var(--muted);
+  transform: translateY(-70%) rotate(45deg);
+  pointer-events: none;
+}
+
+.activity__title {
+  margin-bottom: 20px;
+  font-size: 1.15rem;
+}
+
+.activity__streak {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.activity__big {
+  font-size: 1.9rem;
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+.activity__big.is-lit {
+  color: var(--spark);
+}
+
+.activity__label {
+  font-size: 0.88rem;
+}
+
+.activity__note {
+  margin: -12px 0 20px;
+  font-size: 0.82rem;
+}
+
+.activity__bests {
+  display: grid;
+  gap: 6px;
+  margin: 0 0 24px;
+  padding: 0;
+  list-style: none;
+  font-size: 0.95rem;
+}
+
+.activity__bests li {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.activity__stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin: 0 0 28px;
+  padding: 16px 0;
+  border-block: 1px solid var(--line);
+}
+
+.activity__stats dt {
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.activity__stats dd {
+  margin: 2px 0 0;
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+
+.activity__sub {
+  margin-bottom: 10px;
+  font-size: 0.95rem;
+}
+
+.activity__list {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.activity__list li {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 12px;
+  align-items: center;
+  padding: 10px 0;
+}
+
+.activity__list li + li {
+  border-top: 1px solid var(--line);
+}
+
+.activity__result {
+  width: 10px;
+  height: 10px;
+  border: 2px solid var(--line);
+  border-radius: 50%;
+}
+
+.activity__result.is-win {
+  border-color: var(--spark);
+  background: var(--spark);
+}
+
+.activity__what {
+  display: grid;
+  font-size: 0.95rem;
+}
+
+.activity__what .muted {
+  font-size: 0.85rem;
+}
+
+.activity__when {
+  font-size: 0.82rem;
+  text-align: right;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@media (max-width: 859px) {
+  .profile__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .activity__stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }

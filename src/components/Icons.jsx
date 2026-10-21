@@ -27,3 +27,29 @@ export function UserIcon() {
     </svg>
   )
 }
+
+export function ChevronIcon() {
+  return (
+    <svg {...base} width={16} height={16}>
+      <path d="m6 9 6 6 6-6" />
+    </svg>
+  )
+}
+
+export function CheckCircleIcon() {
+  return (
+    <svg {...base} width={20} height={20}>
+      <circle cx="12" cy="12" r="9" />
+      <path d="m8 12.5 2.7 2.7L16 9.8" />
+    </svg>
+  )
+}
+
+export function LogoutIcon() {
+  return (
+    <svg {...base} width={20} height={20}>
+      <path d="M10 4H6.5A1.5 1.5 0 0 0 5 5.5v13A1.5 1.5 0 0 0 6.5 20H10" />
+      <path d="M15 8.5 19 12l-4 3.5M19 12H9.5" />
+    </svg>
+  )
+}

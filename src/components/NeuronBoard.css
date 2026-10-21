@@ -109,3 +109,29 @@
     transform: translateX(6px);
   }
 }
+
+/* Acierto: una ola ámbar recorre el tablero en diagonal */
+.nb--won .nb__trail--trace .nb__line {
+  stroke: var(--spark);
+}
+
+.nb--won .nb__node {
+  animation: nb-wave 0.7s var(--d, 0ms) ease-out both;
+}
+
+@keyframes nb-wave {
+  0% {
+    transform: scale(1);
+  }
+  45% {
+    transform: scale(1.14);
+    background: var(--spark);
+    border-color: var(--spark);
+    box-shadow: 0 0 0 6px rgba(245, 165, 36, 0.2), 0 0 28px var(--spark-glow);
+  }
+  100% {
+    transform: scale(1);
+    background: rgba(245, 165, 36, 0.28);
+    border-color: var(--spark);
+  }
+}
