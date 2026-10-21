@@ -5,6 +5,8 @@ const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { OAuth2Client } = require('google-auth-library');
+const path = require('path');
+const fs = require('fs');
 const { getDb, describeFirestore } = require('./server/firebase');
 const createActivityRouter = require('./server/activity');
 
@@ -205,6 +207,16 @@ app.use('/api/activity', createActivityRouter({
   getDb,
   timezone: process.env.APP_TIMEZONE || 'America/Mexico_City'
 }));
+
+// --- ARCHIVOS ESTÁTICOS DEL FRONTEND (Producción) ---
+const distPath = path.resolve(__dirname, 'dist');
+if (fs.existsSync(distPath)) {
+  app.use(express.static(distPath));
+  app.get('*', (req, res, next) => {
+    if (req.path.startsWith('/api')) return next();
+    res.sendFile(path.join(distPath, 'index.html'));
+  });
+}
 
 // --- INICIAR SERVIDOR ---
 const PORT = process.env.PORT || 5000;

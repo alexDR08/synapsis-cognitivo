@@ -7,6 +7,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "server": "node index.js",
+    "start": "node index.js",
     "test": "node --test \"server/**/*.test.js\"",
     "firebase:check": "node server/checkFirebase.js",
     "emulator": "npx firebase-tools emulators:start --only firestore"
