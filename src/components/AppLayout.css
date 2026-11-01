@@ -15,6 +15,16 @@
   padding: 28px 24px 120px;
 }
 
+@media (max-width: 480px) {
+  .shell__bar {
+    padding-inline: 16px;
+  }
+
+  .shell__main {
+    padding-inline: 16px;
+  }
+}
+
 @media (min-width: 860px) {
   .shell__main {
     padding-bottom: 64px;
