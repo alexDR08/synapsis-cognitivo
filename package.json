@@ -7,6 +7,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "server": "node index.js",
+    "start": "node index.js",
     "test": "node --test \"server/**/*.test.js\"",
     "firebase:check": "node server/checkFirebase.js",
     "emulator": "npx firebase-tools emulators:start --only firestore"
@@ -34,9 +35,7 @@
     "mongoose": "^9.11.2",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
-    "react-router-dom": "^7.0.0"
-  },
-  "devDependencies": {
+    "react-router-dom": "^7.0.0",
     "@vitejs/plugin-react": "^6.0.0",
     "vite": "^8.0.0"
   }
