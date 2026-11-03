@@ -1,0 +1,64 @@
+.mo {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: clamp(7px, 1.6vw, 12px);
+  width: 100%;
+}
+
+.mo__tile {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  border: 2px solid transparent;
+  border-radius: 14px;
+  background: var(--surface);
+  transition: opacity 0.3s, border-color 0.12s, box-shadow 0.3s;
+}
+
+.mo__glyph {
+  display: block;
+  width: 58%;
+}
+
+.mo__glyph svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* Cuadrícula nueva: las figuras aparecen escalonadas */
+.mo.is-in .mo__glyph {
+  animation: mo-in 0.4s cubic-bezier(0.2, 0.8, 0.3, 1) backwards;
+  animation-delay: calc(var(--i) * 28ms);
+}
+
+.mo__tile.is-scan {
+  border-color: var(--trace);
+}
+
+/* Intruso encontrado: se ilumina y el resto se apaga */
+.mo.is-found .mo__tile:not(.is-odd) {
+  opacity: 0.4;
+}
+
+.mo__tile.is-odd {
+  border-color: var(--spark);
+  box-shadow: 0 0 0 3px rgba(245, 165, 36, 0.25), 0 0 22px var(--spark-glow);
+}
+
+.mo.is-playing .mo__tile.is-odd .mo__glyph {
+  animation: mo-pop 0.5s;
+}
+
+@keyframes mo-in {
+  from {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+}
+
+@keyframes mo-pop {
+  40% {
+    transform: scale(1.25);
+  }
+}

@@ -1,0 +1,85 @@
+.brain {
+  display: block;
+  overflow: visible;
+}
+
+.brain__shape {
+  transform-origin: 50% 50%;
+  animation: brain-breathe 4s ease-in-out infinite;
+}
+
+.brain__outline,
+.brain__stem {
+  fill: var(--panel-node);
+  stroke: var(--trace);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.brain__stem {
+  fill: none;
+}
+
+.brain__fold {
+  fill: none;
+  stroke: var(--trace);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  opacity: 0.35;
+}
+
+.brain__link {
+  stroke: var(--panel-line);
+  stroke-width: 1.4;
+}
+
+/* Un destello corto que recorre cada sinapsis */
+.brain__pulse {
+  fill: none;
+  stroke: var(--spark);
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-dasharray: 14 86;
+  stroke-dashoffset: 100;
+  filter: drop-shadow(0 0 3px var(--spark-glow));
+  animation: brain-pulse 3s linear infinite;
+  animation-delay: var(--delay);
+}
+
+.brain__node {
+  fill: var(--panel-ink);
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: brain-fire 3s ease-in-out infinite;
+  animation-delay: var(--delay);
+}
+
+@keyframes brain-breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.025); }
+}
+
+@keyframes brain-pulse {
+  0% { stroke-dashoffset: 100; opacity: 0; }
+  10% { opacity: 1; }
+  60% { stroke-dashoffset: -14; opacity: 1; }
+  61%, 100% { stroke-dashoffset: -14; opacity: 0; }
+}
+
+@keyframes brain-fire {
+  0%, 70%, 100% { fill: var(--panel-ink); transform: scale(1); filter: none; }
+  80% { fill: var(--spark); transform: scale(1.6); filter: drop-shadow(0 0 5px var(--spark-glow)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brain__shape,
+  .brain__pulse,
+  .brain__node {
+    animation: none;
+  }
+
+  .brain__pulse {
+    opacity: 0;
+  }
+}
