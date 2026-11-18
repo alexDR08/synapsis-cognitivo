@@ -30,3 +30,8 @@
     padding-bottom: 64px;
   }
 }
+
+.shell__sound {
+  margin-right: auto;
+  margin-left: 14px;
+}

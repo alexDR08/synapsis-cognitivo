@@ -2,6 +2,7 @@ import { Link, Outlet } from 'react-router-dom'
 import Logo from './Logo.jsx'
 import TabBar from './TabBar.jsx'
 import './AppLayout.css'
+import SoundToggle from './SoundToggle.jsx'
 
 export default function AppLayout() {
   return (
@@ -10,6 +11,7 @@ export default function AppLayout() {
         <Link to="/" aria-label="Ir al inicio">
           <Logo size={52} />
         </Link>
+        <SoundToggle className="shell__sound" />
         <TabBar />
       </header>
       <main className="shell__main">

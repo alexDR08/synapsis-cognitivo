@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { logAttempt, logEvent } from '../api/activity.js'
 import { PENALTY_SECONDS, buildRound, saveBest } from '../lib/odd.js'
+import { sfx } from '../lib/sfx.js'
 
 function vibrate(pattern) {
   if (typeof navigator !== 'undefined' && typeof navigator.vibrate === 'function') {
@@ -62,6 +63,7 @@ export function useOddGame(level, email) {
     setResult({ found: foundRef.current, mistakes: mistakesRef.current, record })
     setMessage('¡Se acabó el tiempo!')
     vibrate([30, 40, 70])
+    sfx.complete()
   }, [email, level.id, level.seconds, level.size])
 
   // Cuenta atrás 3-2-1 y arranque del reloj
@@ -118,6 +120,7 @@ export function useOddGame(level, email) {
         setHit(index)
         setMessage('¡Lo encontraste!')
         vibrate(20)
+        sfx.ok()
         lock.current = true
         later(() => {
           setRound((prev) => buildRound(level, prev.oddIndex))
@@ -136,6 +139,7 @@ export function useOddGame(level, email) {
       setPenalty(true)
       setMessage(`Esa no. Pierdes ${PENALTY_SECONDS} segundos.`)
       vibrate(60)
+      sfx.fail()
       later(() => {
         setWrong(null)
         setPenalty(false)

@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { sfx } from '../lib/sfx.js'
 
 const CELLS = 9
 const FIRST_LIGHT_MS = 600 // pausa antes del primer destello
@@ -141,6 +142,7 @@ export function useSequenceGame({ onCorrect, onAttempt } = {}) {
         setPhase('lost')
         setMessage('Casi. Mira el patrón otra vez')
         vibrate(120)
+        sfx.fail()
         reportAttempt(false)
         later(() => startRound(lengthRef.current), 1300)
         return
@@ -158,6 +160,7 @@ export function useSequenceGame({ onCorrect, onAttempt } = {}) {
         setPhase('won')
         setMessage('¡Bien! Prepárate para el siguiente patrón')
         vibrate([30, 40, 70])
+        sfx.ok()
         reportAttempt(true)
         onCorrectRef.current?.(
           taps.current.map((c) => c + 1),

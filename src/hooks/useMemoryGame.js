@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { logAttempt, logEvent } from '../api/activity.js'
 import { buildDeck, saveBest } from '../lib/memory.js'
+import { sfx } from '../lib/sfx.js'
 
 function vibrate(pattern) {
   if (typeof navigator !== 'undefined' && typeof navigator.vibrate === 'function') {
@@ -147,6 +148,7 @@ export function useMemoryGame(level, email) {
     setResult({ moves: movesRef.current, seconds: elapsed, record })
     setMessage('¡Completaste el memorama!')
     vibrate([30, 40, 70])
+    sfx.complete()
   }, [email, pairs, level.id, memorizeSeconds])
 
   const flip = useCallback(
@@ -185,11 +187,13 @@ export function useMemoryGame(level, email) {
           } else {
             setMessage('¡Pareja encontrada!')
             vibrate(30)
+            sfx.ok()
           }
         }, MATCH_DELAY_MS)
       } else {
         setMissed(next)
         setMessage('No coinciden. Recuerda dónde están.')
+        sfx.fail()
         later(() => {
           flippedRef.current = []
           setFlipped([])
