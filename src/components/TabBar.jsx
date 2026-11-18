@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom'
-import { TargetIcon } from './Icons.jsx'
+import { NeuronIcon, TargetIcon } from './Icons.jsx'
 import ProfileMenu from './ProfileMenu.jsx'
 import './TabBar.css'
 
@@ -11,6 +11,10 @@ export default function TabBar() {
         <NavLink to="/" end>
           <TargetIcon />
           Entrenar
+        </NavLink>
+        <NavLink to="/neurona">
+          <NeuronIcon />
+          Mi neurona
         </NavLink>
         <ProfileMenu />
       </div>

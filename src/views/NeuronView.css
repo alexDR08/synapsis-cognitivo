@@ -1,0 +1,269 @@
+.neuron__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.neuron__sim {
+  margin: 6px 0 18px;
+  font-size: 0.85rem;
+}
+
+.neuron__layout {
+  display: grid;
+  gap: 20px;
+}
+
+.neuron__stage {
+  position: relative;
+  padding: 14px;
+  border-radius: var(--radius-panel);
+  background: var(--panel);
+  color: var(--panel-ink);
+}
+
+.neuron__canvas {
+  height: 420px;
+}
+
+.neuron__modes {
+  display: inline-flex;
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid var(--panel-line);
+  border-radius: 999px;
+}
+
+.neuron__modes button {
+  padding: 6px 16px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--panel-muted);
+  font: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.neuron__modes button[aria-pressed="true"] {
+  background: var(--spark);
+  color: var(--on-spark);
+  font-weight: 600;
+}
+
+.neuron__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  margin: 8px 4px 0;
+  padding: 0;
+  list-style: none;
+  color: var(--panel-muted);
+  font-size: 0.78rem;
+}
+
+.neuron__legend li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.neuron__ring {
+  width: 12px;
+  height: 12px;
+  border: 3px solid var(--spark);
+  border-radius: 50%;
+}
+
+.neuron__grad {
+  width: 28px;
+  height: 8px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #6f96dc, #ffca50, #ff6b5a);
+}
+
+.neuron__side {
+  display: grid;
+  gap: 14px;
+  align-content: start;
+}
+
+.neuron__stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.neuron__stats > div {
+  display: grid;
+  gap: 2px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-field);
+  background: var(--surface);
+  font-size: 0.8rem;
+}
+
+.neuron__stats strong {
+  font-size: 1.05rem;
+  color: var(--ink);
+}
+
+.neuron__chispa {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  background: var(--surface);
+  line-height: 1.45;
+}
+
+.neuron__tag {
+  color: var(--blue);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.neuron__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.neuron__list {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.neuron__list button {
+  display: grid;
+  grid-template-columns: 1fr 70px 40px 14px;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-field);
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.88rem;
+  text-align: left;
+  cursor: pointer;
+}
+
+.neuron__list button.is-on {
+  border-color: var(--blue);
+  background: var(--blue-soft);
+}
+
+.neuron__bar {
+  height: 6px;
+  border-radius: 3px;
+  background: var(--line);
+  overflow: hidden;
+}
+
+.neuron__bar i {
+  display: block;
+  height: 100%;
+  background: var(--spark);
+}
+
+.neuron__val {
+  color: var(--muted);
+  font-size: 0.8rem;
+  text-align: right;
+}
+
+.neuron__dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.neuron__detail {
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+@media (min-width: 960px) {
+  .neuron__layout {
+    grid-template-columns: minmax(0, 1.5fr) minmax(300px, 1fr);
+  }
+
+  .neuron__canvas {
+    height: 500px;
+  }
+}
+
+@media (max-width: 480px) {
+  .neuron__canvas {
+    height: 380px;
+  }
+
+  .neuron__stats {
+    grid-template-columns: 1fr;
+  }
+
+  .neuron__head .chispa {
+    width: 64px;
+    height: 64px;
+  }
+}
+
+.neuron__gym {
+  display: grid;
+  gap: 10px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  background: var(--surface);
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
+.neuron__gym h2 {
+  font-size: 1.05rem;
+}
+
+.neuron__routine {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.neuron__routine li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-field);
+}
+
+.neuron__routine li > div {
+  display: grid;
+  gap: 2px;
+}
+
+.neuron__routine li.is-done {
+  opacity: 0.65;
+}
+
+.neuron__ok {
+  color: var(--blue);
+  font-weight: 600;
+  white-space: nowrap;
+}

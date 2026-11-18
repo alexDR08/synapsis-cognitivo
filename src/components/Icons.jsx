@@ -19,6 +19,18 @@ export function TargetIcon() {
   )
 }
 
+export function NeuronIcon() {
+  return (
+    <svg {...base}>
+      <circle cx="12" cy="12" r="3" />
+      <circle cx="5" cy="6" r="1.8" />
+      <circle cx="19" cy="7" r="1.8" />
+      <circle cx="18" cy="18" r="1.8" />
+      <path d="M10 10.2 6.4 7.2M14.2 10.5l3.4-2.4M14 14.2l2.7 2.5" />
+    </svg>
+  )
+}
+
 export function UserIcon() {
   return (
     <svg {...base}>
