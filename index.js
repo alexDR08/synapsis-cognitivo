@@ -133,6 +133,7 @@ app.post('/api/auth/google', async (req, res) => {
       score: user.score
     });
   } catch (err) {
+    console.error('[auth/google] verifyIdToken falló:', err.message);
     res.status(401).json({ success: false, message: 'Token de Google inválido o expirado.' });
   }
 });
