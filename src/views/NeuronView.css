@@ -267,3 +267,51 @@
   font-weight: 600;
   white-space: nowrap;
 }
+
+/* Red vacía: invitación de Chispa sobre el grafo */
+.neuron__stage--empty {
+  display: grid;
+}
+
+.neuron__invite {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 10px 4px 4px;
+  padding: 14px 16px;
+  border: 1px solid var(--panel-line);
+  border-radius: var(--radius-card);
+  background: rgba(255, 255, 255, 0.07);
+  line-height: 1.45;
+  animation: invite-pop 0.5s ease-out;
+}
+
+.neuron__invite .neuron__tag {
+  color: var(--spark);
+}
+
+.neuron__invite .speak {
+  background: transparent;
+  border-color: var(--panel-line);
+  color: var(--panel-ink);
+}
+
+.neuron__cta {
+  margin-top: 10px;
+  animation: invite-glow 2.2s ease-in-out infinite;
+}
+
+@keyframes invite-pop {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes invite-glow {
+  0%, 100% { box-shadow: 0 0 0 0 var(--spark-glow); }
+  50% { box-shadow: 0 0 0 8px transparent; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .neuron__invite,
+  .neuron__cta { animation: none; }
+}

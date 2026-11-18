@@ -57,7 +57,7 @@ export default function LoginView() {
           <p>Retos cortos de memoria para tus pausas entre clases.</p>
         </div>
         <BrainAnimation className="login__preview" />
-        <Chispa pose="senalando" size={96} />
+        <Chispa pose="senalando" size={96} className="login__chispa" />
       </aside>
 
       <main className="login__main">

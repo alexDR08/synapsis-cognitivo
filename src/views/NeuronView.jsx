@@ -5,6 +5,9 @@ import SpeakButton from '../components/SpeakButton.jsx'
 import NeuronGraph from '../components/NeuronGraph.jsx'
 import { useChispaVoice } from '../hooks/useChispaVoice.js'
 import { useAuth } from '../context/useAuth.js'
+import { useActivitySummary } from '../hooks/useActivitySummary.js'
+import { firstName } from '../lib/format.js'
+import NeuronEmpty from './NeuronEmpty.jsx'
 import { buildNetwork, chispaAdvice, dailyRoutine, networkLevel, stressColor, stressLabel, WEEK_GOAL } from '../lib/neuron.js'
 import './NeuronView.css'
 
@@ -15,7 +18,7 @@ const MODES = [
   ['gimnasia', 'Gimnasia'],
 ]
 
-export default function NeuronView() {
+function NeuronNetwork() {
   const { user } = useAuth()
   const [nodes, setNodes] = useState(() => buildNetwork(user.email ?? user.name ?? 'invitado', user.score ?? 0))
   const [mode, setMode] = useState('progreso')
@@ -216,4 +219,23 @@ export default function NeuronView() {
       </div>
     </section>
   )
+}
+
+// Decide qué mostrar: red vacía (sin partidas), cargando, o la red con datos.
+export default function NeuronView() {
+  const { user } = useAuth()
+  const { status, data } = useActivitySummary()
+
+  if (status === 'loading') {
+    return (
+      <section className="neuron" aria-busy="true">
+        <h1>Mi neurona</h1>
+        <p className="muted">Despertando tu red…</p>
+      </section>
+    )
+  }
+  if (status === 'ok' && data.empty) {
+    return <NeuronEmpty firstName={firstName(user)} firstVisit={data.firstVisit} />
+  }
+  return <NeuronNetwork />
 }

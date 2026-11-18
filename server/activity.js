@@ -201,15 +201,20 @@ function createActivityRouter({ verifyToken, getDb, timezone = 'America/Mexico_C
     const bests = {};
     for (const [name, value] of Object.entries(data.bests || {})) bests[name] = { ...value, at: toIso(value.at) };
 
+    const totals = {
+      sessions: data.totals?.sessions || 0,
+      attempts: data.totals?.attempts || 0,
+      wins: data.totals?.wins || 0,
+      playSeconds: Math.round(data.totals?.playSeconds || 0),
+    };
+
     res.json({
       ok: true,
+      // "Mi neurona" usa esto: sin intentos registrados la red está vacía; con una sola visita, es la primera vez.
+      empty: totals.attempts === 0,
+      firstVisit: totals.attempts === 0 && totals.sessions <= 1,
       streak: logic.effectiveStreak(data.streak, today),
-      totals: {
-        sessions: data.totals?.sessions || 0,
-        attempts: data.totals?.attempts || 0,
-        wins: data.totals?.wins || 0,
-        playSeconds: Math.round(data.totals?.playSeconds || 0),
-      },
+      totals,
       games,
       bests,
       recent: recentSnap.docs.map((doc) => {

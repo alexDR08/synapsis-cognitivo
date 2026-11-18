@@ -178,7 +178,7 @@ export default function NeuronGraph({ nodes, mode, selectedId, onSelect, burst }
       if (calm) return
       spawn += dt
       // en modo estrés, las neuronas tensas disparan más rápido
-      if (spawn > (mode === 'estres' ? 0.22 : 0.45)) {
+      if (spawn > (mode === 'estres' ? 0.22 : mode === 'vacio' ? 1.6 : 0.45)) {
         spawn = 0
         const hot = list.filter((n) => n.stress > 45)
         const pool = mode === 'estres' && hot.length ? hot : list
@@ -191,7 +191,7 @@ export default function NeuronGraph({ nodes, mode, selectedId, onSelect, burst }
             to,
             t: 0,
             col: mode === 'estres' ? stressColor(src.stress, 1) : BLUE_RGBA,
-            speed: mode === 'estres' ? 0.5 + src.stress / 100 : 0.8,
+            speed: mode === 'estres' ? 0.5 + src.stress / 100 : mode === 'vacio' ? 0.4 : 0.8,
           })
         }
       }
@@ -287,7 +287,7 @@ export default function NeuronGraph({ nodes, mode, selectedId, onSelect, burst }
             ? 1 + Math.sin(t * (2 + s.s / 18) + i) * (s.s / 100) * 0.12
             : 1 + Math.sin(t * 2 + i) * 0.03
         const rr = r * beat
-        const sleepy = mode === 'gimnasia' && n.reps === 0 ? 0.55 : 1
+        const sleepy = (mode === 'gimnasia' || mode === 'vacio') && n.reps === 0 ? 0.55 : 1
         const dim = (sel && sel !== n.id && !near.includes(n.id) ? 0.4 : 1) * sleepy
 
         // halo

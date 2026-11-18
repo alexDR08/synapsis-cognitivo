@@ -136,6 +136,8 @@ test('flujo completo: sesión, intentos, mejor marca, racha y resumen', async ()
   r = await api.call('GET', '/summary');
   assert.equal(r.status, 200);
   const s = r.body;
+  assert.equal(s.empty, false);
+  assert.equal(s.firstVisit, false);
   assert.deepEqual(s.totals, { sessions: 1, attempts: 3, wins: 2, playSeconds: 60 });
   assert.equal(s.streak.current, 1);
   assert.deepEqual(s.games.memory.attempts, 2);
@@ -196,5 +198,24 @@ test('una escritura que falla devuelve 500 en JSON y no tumba el servidor', asyn
   assert.equal(r.status, 500);
   assert.ok(r.body.message);
   assert.equal((await api.call('GET', '/summary')).status, 200);
+  api.close();
+});
+
+test('resumen de alguien sin actividad: red vacía y primera visita', async () => {
+  const api = await startApi();
+  let r = await api.call('GET', '/summary');
+  assert.equal(r.status, 200);
+  assert.equal(r.body.empty, true);
+  assert.equal(r.body.firstVisit, true);
+
+  await api.call('POST', '/sessions', { id: 'sesion-nueva-1', provider: 'password' });
+  r = await api.call('GET', '/summary');
+  assert.equal(r.body.empty, true);
+  assert.equal(r.body.firstVisit, true); // una visita, aún sin jugar
+
+  await api.call('POST', '/sessions', { id: 'sesion-nueva-2', provider: 'password' });
+  r = await api.call('GET', '/summary');
+  assert.equal(r.body.empty, true);
+  assert.equal(r.body.firstVisit, false); // volvió pero sigue sin jugar
   api.close();
 });

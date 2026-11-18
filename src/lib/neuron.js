@@ -125,3 +125,45 @@ export function dailyRoutine(nodes) {
 }
 
 export const WEEK_GOAL = 5 // sesiones por neurona a la semana
+
+// Red vacía: la persona aún no ha jugado. Todas las neuronas están dormidas.
+export function buildEmptyNetwork() {
+  return BASE.map((n) => ({
+    id: n.id,
+    label: n.label,
+    group: n.group,
+    text: n.text,
+    exercise: n.exercise,
+    to: n.to,
+    reps: 0,
+    progress: 0,
+    stress: 0,
+  }))
+}
+
+// Juego que despierta cada neurona (las de bienestar se despiertan jugando cualquiera).
+export const WAKE_GAMES = [
+  { to: '/juego', label: 'Secuencia de patrones', wakes: 'Memoria de trabajo', pose: 'pensando' },
+  { to: '/memorama', label: 'Memorama', wakes: 'Memoria visual', pose: 'estudiando' },
+  { to: '/intruso', label: 'Intruso visual', wakes: 'Atención', pose: 'pesas' },
+]
+
+export function emptyMessage(firstVisit, node, name) {
+  if (node) {
+    const game = node.to ? WAKE_GAMES.find((g) => g.to === node.to) : null
+    return {
+      pose: 'senalando',
+      text: game
+        ? `${node.label} sigue dormida. Juega ${game.label} y verás cómo se enciende.`
+        : `${node.label} despierta cuando entrenas el resto de la red. Empieza con cualquier juego.`,
+      to: game?.to ?? '/juego',
+    }
+  }
+  return {
+    pose: 'celebrando',
+    text: firstVisit
+      ? `¡Hola${name ? `, ${name}` : ''}! Esta es tu neurona, pero todavía duerme. Juega una ronda y empezará a encenderse.`
+      : 'Tu neurona sigue en silencio: aún no hay partidas. Juega una ronda corta y la despiertas.',
+    to: '/juego',
+  }
+}
