@@ -1,6 +1,5 @@
 require('dotenv').config();
 const express = require('express');
-const mongoose = require('mongoose');
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -9,6 +8,7 @@ const path = require('path');
 const fs = require('fs');
 const { getDb, describeFirestore } = require('./server/firebase');
 const createActivityRouter = require('./server/activity');
+const createUserStore = require('./server/users');
 
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const googleClient = new OAuth2Client(GOOGLE_CLIENT_ID);
@@ -20,28 +20,8 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-// --- CONEXIÓN A LA BASE DE DATOS (MongoDB) ---
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/synapsis_db';
-mongoose.connect(MONGO_URI)
-  .then(() => console.log('Base de datos conectada con éxito a MongoDB'))
-  .catch(err => console.error('Error conectando a la base de datos:', err));
-
-// --- MODELO DE USUARIO ---
-const UserSchema = new mongoose.Schema({
-  email: { 
-    type: String, 
-    required: true, 
-    unique: true, 
-    lowercase: true,
-    trim: true,
-    match: [/^[a-zA-Z0-9._%+-]+@uvp\.(edu\.)?mx$/, 'Debe ser un correo institucional válido']
-  },
-  password: { type: String }, // vacío cuando la cuenta se creó con Google
-  googleId: { type: String, index: true },
-  score: { type: Number, default: 0 } // Aciertos acumulados para el perfil
-});
-
-const User = mongoose.model('User', UserSchema);
+// --- USUARIOS (Firestore) ---
+const users = createUserStore(getDb);
 
 // --- MIDDLEWARE DE AUTENTICACIÓN (JWT) ---
 const verifyToken = (req, res, next) => {
@@ -67,22 +47,26 @@ app.post('/api/auth/login', async (req, res) => {
   const { email, password } = req.body;
   
   try {
-    let user = await User.findOne({ email });
-    
+    if (!EMAIL_INSTITUCIONAL.test(String(email || '').trim())) {
+      return res.status(400).json({ message: 'Debe ser un correo institucional válido' });
+    }
+    if (!password) return res.status(400).json({ message: 'Falta la contraseña' });
+
+    let user = await users.findByEmail(email);
+
     // Si el usuario no existe, lo creamos automáticamente para agilizar pruebas
     if (!user) {
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(password, salt);
-      user = new User({ email, password: hashedPassword });
-      await user.save();
+      user = await users.create({ email, password: hashedPassword });
     } else {
       if (!user.password) return res.status(400).json({ message: 'Esta cuenta usa Google. Entra con el botón de Google.' });
       const validPass = await bcrypt.compare(password, user.password);
       if (!validPass) return res.status(400).json({ message: 'Contraseña incorrecta' });
     }
 
-    const username = email.split('@')[0];
-    const token = jwt.sign({ id: user._id, email: user.email }, process.env.JWT_SECRET || 'secreto_synapsis', { expiresIn: '8h' });
+    const username = user.email.split('@')[0];
+    const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET || 'secreto_synapsis', { expiresIn: '8h' });
 
     res.json({
       success: true,
@@ -114,15 +98,14 @@ app.post('/api/auth/google', async (req, res) => {
       return res.status(403).json({ message: 'Debes usar tu correo institucional (@uvp.edu.mx).' });
     }
 
-    let user = await User.findOne({ email });
+    let user = await users.findByEmail(email);
     if (!user) {
-      user = await User.create({ email, googleId: payload.sub });
+      user = await users.create({ email, googleId: payload.sub });
     } else if (!user.googleId) {
-      user.googleId = payload.sub;
-      await user.save();
+      await users.update(user.id, { googleId: payload.sub });
     }
 
-    const token = jwt.sign({ id: user._id, email: user.email }, process.env.JWT_SECRET || 'secreto_synapsis', { expiresIn: '8h' });
+    const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET || 'secreto_synapsis', { expiresIn: '8h' });
     res.json({
       success: true,
       token,
@@ -141,7 +124,8 @@ app.post('/api/auth/google', async (req, res) => {
 // 2. Obtener Perfil del Usuario (Pantalla de Perfil)
 app.get('/api/user/profile', verifyToken, async (req, res) => {
   try {
-    const user = await User.findById(req.user.id);
+    const user = await users.findById(req.user.id);
+    if (!user) return res.status(404).json({ success: false, message: 'Usuario no encontrado' });
     const username = user.email.split('@')[0];
     res.json({
       success: true,
@@ -182,13 +166,10 @@ app.post('/api/game/validate', verifyToken, async (req, res) => {
 
     let currentScore = 0;
     if (isCorrect) {
-      const user = await User.findById(req.user.id);
-      user.score += 1; // Suma +1 acierto acumulado
-      await user.save();
-      currentScore = user.score;
+      currentScore = await users.incrementScore(req.user.id); // Suma +1 acierto acumulado
     } else {
-      const user = await User.findById(req.user.id);
-      currentScore = user.score;
+      const user = await users.findById(req.user.id);
+      currentScore = user ? user.score || 0 : 0;
     }
 
     res.json({
