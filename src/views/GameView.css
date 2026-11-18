@@ -93,3 +93,24 @@
 .game__bar p {
   text-align: right;
 }
+
+.game__titlebar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.game__mascot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.game__mascot .game__status {
+  min-height: 0;
+  margin-top: 0;
+  text-align: left;
+}

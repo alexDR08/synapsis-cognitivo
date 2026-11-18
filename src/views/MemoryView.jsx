@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import Chispa from '../components/Chispa.jsx'
 import { useNavigate } from 'react-router-dom'
 import Button from '../components/Button.jsx'
 import MemoryCard from '../components/MemoryCard.jsx'
@@ -8,6 +9,7 @@ import { useAuth } from '../context/useAuth.js'
 import { useMemoryGame } from '../hooks/useMemoryGame.js'
 import { LEVELS, formatTime, getBest } from '../lib/memory.js'
 import './MemoryView.css'
+import SoundToggle from '../components/SoundToggle.jsx'
 
 export default function MemoryView() {
   const navigate = useNavigate()
@@ -33,9 +35,13 @@ export default function MemoryView() {
         <Button variant="ghost" size="sm" onClick={() => navigate('/')}>
           Salir
         </Button>
+        <SoundToggle />
       </div>
 
-      <h1 className="memory__title">Memorama</h1>
+      <div className="game__titlebar">
+        <h1 className="memory__title">Memorama</h1>
+        <Chispa pose="estudiando" size={72} />
+      </div>
       <p className="muted memory__lead">
         Primero verás dónde está cada carta y tendrás unos segundos para memorizarlas. Luego se
         tapan y debes encontrar las parejas con los menos movimientos. Elige un nivel.

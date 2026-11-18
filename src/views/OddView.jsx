@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import Chispa from '../components/Chispa.jsx'
 import { useNavigate } from 'react-router-dom'
 import Button from '../components/Button.jsx'
 import Glyph from '../components/Glyph.jsx'
@@ -9,6 +10,7 @@ import { useOddGame } from '../hooks/useOddGame.js'
 import { SYMBOLS } from '../lib/memory.js'
 import { ODD_LEVELS, PENALTY_SECONDS, getBest } from '../lib/odd.js'
 import './OddView.css'
+import SoundToggle from '../components/SoundToggle.jsx'
 
 export default function OddView() {
   const navigate = useNavigate()
@@ -34,9 +36,13 @@ export default function OddView() {
         <Button variant="ghost" size="sm" onClick={() => navigate('/')}>
           Salir
         </Button>
+        <SoundToggle />
       </div>
 
-      <h1 className="memory__title">Intruso visual</h1>
+      <div className="game__titlebar">
+        <h1 className="memory__title">Intruso visual</h1>
+        <Chispa pose="estudiando" size={72} />
+      </div>
       <p className="muted memory__lead">
         Entre muchas figuras iguales hay una distinta. Encuéntrala y toca; en 45 segundos, ¿cuántas
         logras? Cada error te quita {PENALTY_SECONDS} segundos.

@@ -1,4 +1,6 @@
 import Button from '../components/Button.jsx'
+import Chispa from '../components/Chispa.jsx'
+import DailyTip from '../components/DailyTip.jsx'
 import HoverPanel from '../components/HoverPanel.jsx'
 import MemoryPreview from '../components/MemoryPreview.jsx'
 import OddPreview from '../components/OddPreview.jsx'
@@ -48,12 +50,17 @@ export default function HomeView() {
 
   return (
     <>
-      <header className="greet">
-        <p className="muted">{todayLabel()}</p>
-        <h1>Hola, {firstName(user)}</h1>
-        <p className="greet__lead">Cinco minutos de memoria antes de volver a tus tareas.</p>
-        <StreakChip />
+      <header className="greet greet--chispa">
+        <div>
+          <p className="muted">{todayLabel()}</p>
+          <h1>Hola, {firstName(user)}</h1>
+          <p className="greet__lead">Cinco minutos de memoria antes de volver a tus tareas.</p>
+          <StreakChip />
+        </div>
+        <Chispa pose="celebrando" size={120} />
       </header>
+
+      <DailyTip />
 
       <HoverPanel className="hero" aria-labelledby="hero-title">
         {(playing) => (

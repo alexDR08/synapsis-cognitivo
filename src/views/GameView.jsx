@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
+import Chispa from '../components/Chispa.jsx'
 import { useNavigate } from 'react-router-dom'
 import { logAttempt, logEvent } from '../api/activity.js'
 import { validateSequence } from '../api/game.js'
@@ -9,6 +10,7 @@ import SuccessBurst from '../components/SuccessBurst.jsx'
 import { useAuth } from '../context/useAuth.js'
 import { useSequenceGame } from '../hooks/useSequenceGame.js'
 import './GameView.css'
+import SoundToggle from '../components/SoundToggle.jsx'
 
 export default function GameView() {
   const navigate = useNavigate()
@@ -71,6 +73,7 @@ export default function GameView() {
             {game.hits}
           </strong>
         </p>
+        <SoundToggle />
       </div>
 
       <div className="game__board">
@@ -93,9 +96,12 @@ export default function GameView() {
         )}
       </div>
 
-      <p className={`game__status${game.phase === 'won' ? ' is-won' : ''}`} aria-live="polite">
-        {game.message}
-      </p>
+      <div className="game__mascot">
+        <Chispa pose={game.phase === 'won' ? 'celebrando' : game.phase === 'input' ? 'pensando' : 'estudiando'} size={72} />
+        <p className={`game__status${game.phase === 'won' ? ' is-won' : ''}`} aria-live="polite">
+          {game.message}
+        </p>
+      </div>
 
       <div className="game__memory">
         <span className="muted">Tiempo de memorización</span>

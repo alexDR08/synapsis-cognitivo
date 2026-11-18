@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import Chispa from '../components/Chispa.jsx'
 import { getProfile } from '../api/auth.js'
 import { isAuthError } from '../api/client.js'
 import { useAuth } from '../context/useAuth.js'
@@ -54,7 +55,10 @@ export default function ProfileView() {
 
   return (
     <section className="profile">
-      <h1>Tu perfil</h1>
+      <div className="profile__head">
+        <h1>Tu perfil</h1>
+        <Chispa pose="pesas" size={72} />
+      </div>
 
       <div className="profile__grid">
         <div className="profile__card">

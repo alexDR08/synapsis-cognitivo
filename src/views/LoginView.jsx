@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import Chispa from '../components/Chispa.jsx'
 import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 import Button from '../components/Button.jsx'
 import GoogleButton from '../components/GoogleButton.jsx'
@@ -56,6 +57,7 @@ export default function LoginView() {
           <p>Retos cortos de memoria para tus pausas entre clases.</p>
         </div>
         <BrainAnimation className="login__preview" />
+        <Chispa pose="senalando" size={96} />
       </aside>
 
       <main className="login__main">

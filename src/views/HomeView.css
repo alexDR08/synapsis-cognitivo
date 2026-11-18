@@ -204,3 +204,14 @@
     border-top: 1px solid var(--line);
   }
 }
+
+.greet--chispa {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+@media (max-width: 480px) {
+  .greet--chispa .chispa { width: 84px; height: 84px; }
+}
